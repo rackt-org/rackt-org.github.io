@@ -1,0 +1,31 @@
+.counter {
+    margin-left: 25px;
+    margin-right: 25px;
+
+    font-size: 18px;
+}
+
+.todo-item {
+    width: 100%;
+    padding-left: 30px;
+
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-input,
+.todo-done-button {
+    margin: 0;
+}
+
+.header-content {
+    text-align: center;
+}
+
+.example {
+    margin-bottom: 80px;
+}
