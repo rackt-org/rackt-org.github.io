@@ -2,12 +2,14 @@
 
 (require "./counter.rkt"
          "./todo.rkt"
-         "./rackt.rkt")
+         rackt)
 
 (define (header props . ..)
     (<el "header"
         (<el "div" #:props ($/obj [ className "header-content" ])
-            (<el "h1" "Rackt")
+            (<el "img" #:props ($/obj [ src "https://raw.githubusercontent.com/rackt-org/rackt-org.github.io/master/logo.png" ]
+                                      [ className "logo" ]))
+            (<el "h1" (<el  "a" #:props ($/obj [ href "https://github.com/rackt-org/rackt" ]) "Rackt"))
             (<el "p" "An ultrasmall (~70 loc) React wrapper written in "
                 (<el "a" #:props ($/obj [ href "https://github.com/vishesh/racketscript" ]) "RacketScript")))))
 

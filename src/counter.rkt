@@ -1,7 +1,7 @@
 #lang racketscript/base
 
 (require racketscript/interop
-         "./rackt.rkt")
+         rackt)
 
 (define (counter props ..)
     (define-values (counter set-counter) (use-state 0))

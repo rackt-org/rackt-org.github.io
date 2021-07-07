@@ -1,7 +1,7 @@
 #lang racketscript/base
 
 (require racketscript/interop
-         "./rackt.rkt")
+         rackt)
 
 (define StateContext (create-context))
 
