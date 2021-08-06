@@ -3,22 +3,21 @@
 (require racketscript/interop
          rackt)
 
-(define (counter props ..)
-    (define-values (counter set-counter) (use-state 0))
-
+(define-component counter
+    (define-state COUNT 0)
     (<> "div"
         (<> "button"
             #:props ([ className "button" ]
                      [ type "button" ]
-                     [ onClick (lambda (_) (set-counter (sub1 counter))) ])
+                     [ onClick (lambda (_) (set-COUNT! (sub1 COUNT))) ])
             "- 1")
 
-        (<> "span" #:props ([ className "counter" ]) counter)
+        (<> "span" #:props ([ className "counter" ]) COUNT)
 
         (<> "button"
             #:props ([ className "button" ]
                      [ type "button" ]
-                     [ onClick (lambda (_) (set-counter (add1 counter))) ])
+                     [ onClick (lambda (_) (set-COUNT! (add1 COUNT))) ])
             "+ 1")))
 
 (provide counter)

@@ -8,7 +8,7 @@
          "./todo.rkt"
          rackt)
 
-(define (header props . ..)
+(define-component header
     (<> "header"
         (<> "div" #:props ([ className "header-content" ])
             (<> "img" #:props ([ src "https://raw.githubusercontent.com/rackt-org/rackt-org.github.io/master/logo.png" ]
@@ -17,7 +17,7 @@
             (<> "p" "An ultrasmall (~70 loc) React wrapper written in "
                 (<> "a" #:props ([ href "https://github.com/vishesh/racketscript" ]) "RacketScript")))))
 
-(define (intro props . ..)
+(define-component intro
     (<> "div"
         (<> "p" "Rackt is a tiny but still powerful React wrapper that allows you to write functional components with React hooks, contexts, and so on.
         Despite the fact Rackt is in the early development stage, you can already use it because it has only simple js interop under the hood.
@@ -36,7 +36,7 @@
     (<> \"div\" \"some text\"))"))
         (<> "p" "In the examples below you can see more complex components and apps (btw this site is written in Rackt as well).")))
 
-(define (counter-example props . ..)
+(define-component counter-example
     (<> "div" #:props ([ className "example" ])
         (<> "div"
             (<> "h3" "Counter")
@@ -45,7 +45,7 @@
             (<> "h3" "Source code")
             (<> "pre" (<> "code" #:props ([ className "language-racket"]) counter-source-code)))))
 
-(define (todo-example props . ..)
+(define-component todo-example
     (<> "div" #:props ([ className "example" ])
         (<> "div"
             (<> "h3" "Todo app")
@@ -54,14 +54,13 @@
             (<> "h3" "Source code")
             (<> "pre" (<> "code" #:props ([ className "language-racket"]) todo-source-code)))))
 
-(define (app props . ..)
-    (<> "div"
-        #:props ([ className "container" ])
-            (<> header)
-            (<> intro)
-            (<> "h2" "Examples")
-            (<> counter-example)
-            (<> todo-example)))
+(define-component app
+    (<> "div" #:props ([ className "container" ])
+        (<> header)
+        (<> intro)
+        (<> "h2" "Examples")
+        (<> counter-example)
+        (<> todo-example)))
 
 (require (for-syntax mzlib/etc))
 (define-for-syntax this-dir (this-expression-source-directory))

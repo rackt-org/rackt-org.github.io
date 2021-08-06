@@ -5,6 +5,59 @@
 
 (define StateContext (create-context))
 
+(define-component todo-input
+  (in-context StateContext
+    ;; $ctx is implicity bound to the React context value
+    ;; it may be used as a plain id, or may called with property arguments
+    (define dispatch ($ctx 'dispatch))
+    (define store ($ctx 'store))
+    (define-state TEXT "")
+
+    (define (update-text e)
+        (set-TEXT! (js-string->string ($ e 'target 'value)) TEXT))
+
+    (define (submit-todo e)
+        (($ e 'preventDefault))
+        (dispatch ($/obj [ type "add" ]
+                       [ todo ($/obj [ id (#js*.Date.now) ]
+                                     [ text TEXT ])]))
+
+    (set-TEXT! ""))
+
+    (<> "form"
+         #:props ([ onSubmit submit-todo ])
+            (<> "input"
+                #:props ([ className "todo-input" ]
+                         [ placeholder "What needs to be done?" ]
+                         [ value TEXT ]
+                         [ onChange update-text])))))
+
+(define-component todo-item
+  (in-context StateContext
+    ;; $ctx is implicity bound to the React context value
+    ;; it may be used as a plain id, or may called with property arguments
+    (define dispatch ($ctx 'dispatch))
+    (define (done-todo id)
+      (dispatch ($/obj [ type "done" ]
+                       [ id ($props 'todo 'id) ])))
+
+    (<> "li" #:props ([ className "todo-item"])
+        ;; $props is implicity bound to the React "props" of this component;
+        ;; it may be used as a plain id, or may be called with property arguments
+        ($props 'todo 'text)
+        (<> "button"
+            #:props ([ type "button" ]
+                     [ className "button button-clear todo-done-button"]
+                     [ onClick done-todo ])
+            "✔"))))
+
+(define-component todo-list
+  (in-context StateContext
+    (define dispatch ($ctx 'dispatch))
+    (define store ($ctx 'store))
+    (<> "ul"
+        (map (lambda (todo) (<> todo-item #:props ([todo todo]))) ($ store 'todos)))))
+
 (define default-state
     ($/obj [ todos (list
         ($/obj [ id 0 ] [ text "Replace JavaScript with RacketScript"])
@@ -25,64 +78,11 @@
             ($/obj [ todos (done-todo state action)])]
         [else state]))
 
-(define (todo-input props . ..)
-    (define ctx (use-context StateContext))
-    (define dispatch ($ ctx 'dispatch))
-    (define store ($ ctx 'store))
-    (define-values (text set-text) (use-state ""))
-
-    (define (update-text e)
-        (set-text (js-string->string ($ e 'target 'value)) text))
-
-    (define (submit-todo e)
-        (($ e 'preventDefault))
-        (dispatch ($/obj [ type "add" ]
-                       [ todo ($/obj [ id (#js*.Date.now) ]
-                                     [ text text ])]))
-
-    (set-text ""))
-
-    (<> "form"
-         #:props ([ onSubmit submit-todo ])
-            (<> "input"
-                #:props ([ className "todo-input" ]
-                         [ placeholder "What needs to be done?" ]
-                         [ value text ]
-                         [ onChange update-text]))))
-
-(define (todo-item props . ..)
-    (define ctx (use-context StateContext))
-    (define dispatch ($ ctx 'dispatch))
-    (define (done-todo id)
-        (dispatch ($/obj [ type "done" ]
-                         [ id ($ props 'todo 'id) ])))
-
-    (<> "li"
-        #:props ([ className "todo-item"])
-            ($ props 'todo 'text)
-            (<> "button"
-                #:props ([ type "button" ]
-                         [ className "button button-clear todo-done-button"]
-                         [ onClick done-todo ])
-                "✔")))
-
-(define (todo-list props . ..)
-    (define ctx (use-context StateContext))
-    (define dispatch ($ ctx 'dispatch))
-    (define store ($ ctx 'store))
-
-    (<> "ul"
-         (map (lambda (todo) (<> todo-item #:props ([todo todo]))) ($ store 'todos))))
-
-(define (todo-app props . ..)
-    (define provider ($ StateContext 'Provider))
-    (define-values (store dispatch) (use-reducer reducer default-state))
-
-    (<> provider
-        #:props ([ value ($/obj [ store store ]
-                                [ dispatch dispatch ])])
-        (<> "div"
-            (<> todo-input))
-            (<> todo-list)))
+(define-component todo-app
+  (define-values (store dispatch) (use-reducer reducer default-state))
+  (with-context StateContext = ($/obj [ store store ] [ dispatch dispatch ])
+    (<> "div"
+        (<> todo-input)
+        (<> todo-list))))
 
 (provide todo-app)
