@@ -4,8 +4,8 @@
                      racket/file
                      racket/syntax
                      syntax/parse)
-         "./counter.rkt"
-         "./todo.rkt"
+         "./counter-new.rkt"
+         "./todo-new.rkt"
          rackt)
 
 (define-component header
@@ -85,9 +85,9 @@
 ;; need get these first, rather than in the macro,
 ;; bc racketscript seems to expand twice?
 (define-syntax counter-src-code-str
-  (file->string (build-path this-dir "counter.rkt")))
+  (file->string (build-path this-dir "counter-new.rkt")))
 (define-syntax todo-src-code-str
-  (file->string (build-path this-dir "todo.rkt")))
+  (file->string (build-path this-dir "todo-new.rkt")))
 
 (define-src-code-str-def todo)
 (define-src-code-str-def counter)
