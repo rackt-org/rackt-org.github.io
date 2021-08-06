@@ -66,10 +66,6 @@
   ;; - $ctx-dispatch: the Reducer's dispatch function
   (in-reducer-context TodoListContext
 
-    ;; define-state is shorthand for React's useState
-    ;; A call to (define-state name val) defines two variables:
-    ;; - name
-    ;; - set-name!
     (define-state TEXT "")
 
     (define (update-text e)

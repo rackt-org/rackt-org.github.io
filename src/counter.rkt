@@ -4,7 +4,12 @@
          rackt)
 
 (define-component counter
+  ;; A call to (define-state name val) defines two variables:
+  ;; - name
+  ;; - set-name!
+  ;; define-state is shorthand for React's useState
   (define-state COUNT 0)
+
   (<> "div"
       (<> "button" #:props ([ className "button" ]
                             [ type "button" ]

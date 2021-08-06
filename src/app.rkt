@@ -1,4 +1,4 @@
-#lang racketscript/base
+#lang at-exp racketscript/base
 
 (require (for-syntax racket/base
                      racket/file
@@ -14,27 +14,35 @@
             (<> "img" #:props ([ src "https://raw.githubusercontent.com/rackt-org/rackt-org.github.io/master/logo.png" ]
                                [ className "logo" ]))
             (<> "h1" (<> "a" #:props ([ href "https://github.com/rackt-org/rackt" ]) "Rackt"))
-            (<> "p" "An ultrasmall (~70 loc) React wrapper written in "
+            (<> "p" "A React wrapper written in "
                 (<> "a" #:props ([ href "https://github.com/vishesh/racketscript" ]) "RacketScript")))))
 
 (define-component intro
     (<> "div"
-        (<> "p" "Rackt is a tiny but still powerful React wrapper that allows you to write functional components with React hooks, contexts, and so on.
-        Despite the fact Rackt is in the early development stage, you can already use it because it has only simple js interop under the hood.
-        In most cases Rackt doesn't change API of React and you can use all familiar functions as you've already used to.
-        Here is an example of a simple Rackt component:")
+        @<>["p"]{Rackt is a React wrapper that allows you to write functional components with React hooks, contexts, and so on.
+                 As a first step, you can use almost exactly the same React API that you're used to because it seemlessly interoperates with JS under the hood.
+                 Here is an example of a simple Rackt component:}
         (<> "pre"
-            (<> "code" #:props ([ className "language-racket" ])
+            (<> "code" #:props ($/obj [ className "language-racket" ])
                 "(define (simple-component props . ..)
     (<> \"div\" #:props ([ className \"some-class\" ]) \"some text\"))"))
 
-        (<> "p" (<> "code" "<>") " here is a simple alias for " (<> "code" "React.createElement") " function
-        that has optional " (<> "code" "#:props") " parameter so you can skip it if you want:")
+        (<> "p" (<> "code" "<>") " here is a simple alias for the " (<> "code" "React.createElement") " function
+        that has optional an " (<> "code" "#:props") " parameter so you can skip it if you want:")
         (<> "pre"
             (<> "code" #:props ([ className "language-racket" ])
                 "(define (simple-component props . ..)
     (<> \"div\" \"some text\"))"))
-        (<> "p" "In the examples below you can see more complex components and apps (btw this site is written in Rackt as well).")))
+        @<>["p"]{Because it's written with RacketScript, however, Rackt takes advantage of Racket's powerful macros in order to simplify and hide a lot of boilerplate that you would normally have to write in plain JS:}
+
+        (<> "pre"
+            (<> "code" #:props ($/obj [ className "language-racket" ])
+                "(define-component simple-component
+    (<> \"div\" #:props ([ className \"some-class\" ]) ($props 'value))"))
+
+        (<> "p" "Here " (<> "code" "define-component") " defines a React component, but automatically propagates the \"props\" for you in the implicit " (<> "code" "$props") " variable.")
+
+        (<> "p" "In the examples below you can see more complex components and apps (btw this site is written in Rackt as well), and how Rackt and RacketScript help to manage and reduce this complexity.")))
 
 (define-component counter-example
     (<> "div" #:props ([ className "example" ])
