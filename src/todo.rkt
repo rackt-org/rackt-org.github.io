@@ -42,13 +42,13 @@
 
     (set-text ""))
 
-    (<el "form"
-         #:props ($/obj [ onSubmit submit-todo ])
-            (<el "input"
-                #:props ($/obj [ className "todo-input" ]
-                               [ placeholder "What needs to be done?" ]
-                               [ value text ]
-                               [ onChange update-text]))))
+    (<> "form"
+         #:props ([ onSubmit submit-todo ])
+            (<> "input"
+                #:props ([ className "todo-input" ]
+                         [ placeholder "What needs to be done?" ]
+                         [ value text ]
+                         [ onChange update-text]))))
 
 (define (todo-item props . ..)
     (define ctx (use-context StateContext))
@@ -57,13 +57,13 @@
         (dispatch ($/obj [ type "done" ]
                          [ id ($ props 'todo 'id) ])))
 
-    (<el "li"
-        #:props ($/obj [ className "todo-item"])
+    (<> "li"
+        #:props ([ className "todo-item"])
             ($ props 'todo 'text)
-            (<el "button"
-                #:props ($/obj [ type "button" ]
-                            [ className "button button-clear todo-done-button"]
-                            [ onClick done-todo ])
+            (<> "button"
+                #:props ([ type "button" ]
+                         [ className "button button-clear todo-done-button"]
+                         [ onClick done-todo ])
                 "✔")))
 
 (define (todo-list props . ..)
@@ -71,19 +71,18 @@
     (define dispatch ($ ctx 'dispatch))
     (define store ($ ctx 'store))
 
-    (<el "ul"
-         (map (lambda (todo) (<el todo-item #:props ($/obj [todo todo]))) ($ store 'todos))))
+    (<> "ul"
+         (map (lambda (todo) (<> todo-item #:props ([todo todo]))) ($ store 'todos))))
 
 (define (todo-app props . ..)
     (define provider ($ StateContext 'Provider))
     (define-values (store dispatch) (use-reducer reducer default-state))
 
-    (<el provider
-        #:props ($/obj [ value
-            ($/obj [ store store ]
-                   [ dispatch dispatch ])])
-        (<el "div"
-            (<el todo-input))
-            (<el todo-list)))
+    (<> provider
+        #:props ([ value ($/obj [ store store ]
+                                [ dispatch dispatch ])])
+        (<> "div"
+            (<> todo-input))
+            (<> todo-list)))
 
 (provide todo-app)

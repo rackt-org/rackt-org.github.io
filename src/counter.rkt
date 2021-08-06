@@ -6,19 +6,19 @@
 (define (counter props ..)
     (define-values (counter set-counter) (use-state 0))
 
-    (<el "div"
-        (<el "button"
-            #:props ($/obj [ className "button" ]
-                   [ type "button" ]
-                   [onClick (lambda (_) (set-counter (- counter 1)))])
+    (<> "div"
+        (<> "button"
+            #:props ([ className "button" ]
+                     [ type "button" ]
+                     [ onClick (lambda (_) (set-counter (sub1 counter))) ])
             "- 1")
 
-        (<el "span" #:props ($/obj [ className "counter" ]) counter)
+        (<> "span" #:props ([ className "counter" ]) counter)
 
-        (<el "button"
-            #:props ($/obj [ className "button" ]
-                   [ type "button" ]
-                   [onClick (lambda (_) (set-counter (+ counter 1)))])
+        (<> "button"
+            #:props ([ className "button" ]
+                     [ type "button" ]
+                     [ onClick (lambda (_) (set-counter (add1 counter))) ])
             "+ 1")))
 
 (provide counter)
