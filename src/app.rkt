@@ -62,13 +62,21 @@
             (<> "h3" "Source code")
             (<> "pre" (<> "code" #:props ([ className "language-racket"]) todo-source-code)))))
 
+
+(define-component todo-orig-example
+    (<> "div" #:props ([ className "example" ])
+        (<> "div"
+            (<> "p" "For reference, here is the same todo app written with a lower level React API")
+            (<> "pre" (<> "code" #:props ([ className "language-racket"]) todo-orig-source-code)))))
+
 (define-component app
     (<> "div" #:props ([ className "container" ])
         (<> header)
         (<> intro)
         (<> "h2" "Examples")
         (<> counter-example)
-        (<> todo-example)))
+        (<> todo-example)
+        (<> todo-orig-example)))
 
 (require (for-syntax mzlib/etc))
 (define-for-syntax this-dir (this-expression-source-directory))
@@ -88,9 +96,12 @@
   (file->string (build-path this-dir "counter-new.rkt")))
 (define-syntax todo-src-code-str
   (file->string (build-path this-dir "todo-new.rkt")))
+(define-syntax todo-orig-src-code-str
+  (file->string (build-path this-dir "todo.rkt")))
 
-(define-src-code-str-def todo)
 (define-src-code-str-def counter)
+(define-src-code-str-def todo)
+(define-src-code-str-def todo-orig)
 
 (render (<> app) "root")
 
