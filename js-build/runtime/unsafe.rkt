@@ -1,7 +1,7 @@
 #lang racketscript/boot
 
-(require (for-syntax syntax/parse)
-         racketscript/interop
+(require racketscript/interop
+         (for-syntax syntax/parse)
          "lib.rkt")
 
 (define Core   ($/require/* "./core.js"))
@@ -156,3 +156,4 @@
 
 (define+provide (unsafe-root-continuation-prompt-tag)
   (#js.Core.Marks.defaultContinuationPromptTag))
+

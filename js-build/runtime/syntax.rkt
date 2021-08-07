@@ -1,8 +1,8 @@
 #lang racketscript/boot
 
-(require (for-syntax syntax/parse)
+(require racketscript/interop
          racket/stxparam
-         racketscript/interop
+         (for-syntax syntax/parse)
          "lib.rkt")
 
 (provide (rename-out [-syntax? syntax?]

@@ -1,11 +1,12 @@
 #lang racketscript/boot
 
-(require (for-syntax racket/base
-                     racket/format
-                     racket/list
-                     syntax/parse)
+(require racketscript/interop
          racket/stxparam
-         racketscript/interop)
+         syntax/parse/define
+         (for-syntax racket/base
+                     racket/list
+                     racket/format
+                     syntax/parse))
 
 (provide throw
          new
