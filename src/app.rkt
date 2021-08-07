@@ -1,168 +1,108 @@
-#lang racketscript/base
+#lang at-exp racketscript/base
 
-(require "./counter.rkt"
+(require (for-syntax racket/base
+                     racket/file
+                     racket/syntax
+                     syntax/parse)
+         "./counter.rkt"
          "./todo.rkt"
          rackt)
 
-(define (header props . ..)
-    (<el "header"
-        (<el "div" #:props ($/obj [ className "header-content" ])
-            (<el "img" #:props ($/obj [ src "https://raw.githubusercontent.com/rackt-org/rackt-org.github.io/master/logo.png" ]
-                                      [ className "logo" ]))
-            (<el "h1" (<el  "a" #:props ($/obj [ href "https://github.com/rackt-org/rackt" ]) "Rackt"))
-            (<el "p" "An ultrasmall (~70 loc) React wrapper written in "
-                (<el "a" #:props ($/obj [ href "https://github.com/vishesh/racketscript" ]) "RacketScript")))))
+(define-component header
+    (<> "header"
+        (<> "div" #:props ([ className "header-content" ])
+            (<> "img" #:props ([ src "https://raw.githubusercontent.com/rackt-org/rackt-org.github.io/master/logo.png" ]
+                               [ className "logo" ]))
+            (<> "h1" (<> "a" #:props ([ href "https://github.com/rackt-org/rackt" ]) "Rackt"))
+            (<> "p" "A React wrapper written in "
+                (<> "a" #:props ([ href "https://github.com/vishesh/racketscript" ]) "RacketScript")))))
 
-(define (intro props . ..)
-    (<el "div"
-        (<el "p" "Rackt is a tiny but still powerful React wrapper that allows you to write functional components with React hooks, contexts, and so on.
-        Despite the fact Rackt is in the early development stage, you can already use it because it has only simple js interop under the hood.
-        In most cases Rackt doesn't change API of React and you can use all familiar functions as you've already used to.
-        Here is an example of a simple Rackt component:")
-        (<el "pre"
-            (<el "code" #:props ($/obj [ className "language-racket" ])
+(define-component intro
+    (<> "div"
+        @<>["p"]{Rackt is a React wrapper that allows you to write functional components with React hooks, contexts, and so on.
+                 As a first step, you can use almost exactly the same React API that you're used to because it seemlessly interoperates with JS under the hood.
+                 Here is an example of a simple Rackt component:}
+        (<> "pre"
+            (<> "code" #:props ($/obj [ className "language-racket" ])
                 "(define (simple-component props . ..)
-    (<el \"div\" #:props ($/obj [ className \"some-class\" ]) \"some text\"))"))
+    (<> \"div\" #:props ([ className \"some-class\" ]) \"some text\"))"))
 
-        (<el "p" (<el "code" "<el") " here is a simple alias for " (<el "code" "React.createElement") " function
-        that has optional " (<el "code" "#:props") " parameter so you can skip it if you want:")
-        (<el "pre"
-            (<el "code" #:props ($/obj [ className "language-racket" ])
+        (<> "p" (<> "code" "<>") " here is a simple alias for the " (<> "code" "React.createElement") " function
+        that has optional an " (<> "code" "#:props") " parameter so you can skip it if you want:")
+        (<> "pre"
+            (<> "code" #:props ([ className "language-racket" ])
                 "(define (simple-component props . ..)
-    (<el \"div\" \"some text\"))"))
-        (<el "p" "In the examples below you can see more complex components and apps (btw this site is written in Rackt as well).")))
+    (<> \"div\" \"some text\"))"))
+        @<>["p"]{Because it's written with RacketScript, however, Rackt takes advantage of Racket's powerful macros in order to simplify and hide a lot of boilerplate that you would normally have to write in plain JS:}
 
-(define (counter-example props . ..)
-    (<el "div" #:props ($/obj [ className "example" ])
-        (<el "div"
-            (<el "h3" "Counter")
-            (<el counter))
-        (<el "div"
-            (<el "h3" "Source code")
-            (<el "pre" (<el "code" #:props ($/obj [ className "language-racket"]) counter-source-code)))))
+        (<> "pre"
+            (<> "code" #:props ($/obj [ className "language-racket" ])
+                "(define-component simple-component
+    (<> \"div\" #:props ([ className \"some-class\" ]) ($props 'value))"))
 
-(define (todo-example props . ..)
-    (<el "div" #:props ($/obj [ className "example" ])
-        (<el "div"
-            (<el "h3" "Todo app")
-            (<el todo-app))
-        (<el "div"
-            (<el "h3" "Source code")
-            (<el "pre" (<el "code" #:props ($/obj [ className "language-racket"]) todo-source-code)))))
+        (<> "p" "Here " (<> "code" "define-component") " defines a React component, but automatically propagates the \"props\" for you in the implicit " (<> "code" "$props") " variable.")
 
-(define (app props . ..)
-    (<el "div"
-        #:props ($/obj [ className "container" ])
-            (<el header)
-            (<el intro)
-            (<el "h2" "Examples")
-            (<el counter-example)
-            (<el todo-example)))
+        (<> "p" "In the examples below you can see more complex components and apps (btw this site is written in Rackt as well), and how Rackt and RacketScript help to manage and reduce this complexity.")))
 
-(define todo-source-code "#lang racketscript/base
+(define-component counter-example
+    (<> "div" #:props ([ className "example" ])
+        (<> "div"
+            (<> "h3" "Counter")
+            (<> counter))
+        (<> "div"
+            (<> "h3" "Source code")
+            (<> "pre" (<> "code" #:props ([ className "language-racket"]) counter-source-code)))))
 
-(require racketscript/interop
-         \"./rackt.rkt\")
+(define-component todo-example
+    (<> "div" #:props ([ className "example" ])
+        (<> "div"
+            (<> "h3" "Todo app")
+            (<> todo-app))
+        (<> "div"
+            (<> "h3" "Source code")
+            (<> "pre" (<> "code" #:props ([ className "language-racket"]) todo-source-code)))))
 
-(define StateContext (create-context))
 
-(define (add-todo state action)
-    (append ($ state 'todos) (list ($ action 'todo))))
+(define-component todo-orig-example
+    (<> "div" #:props ([ className "example" ])
+        (<> "div"
+            (<> "p" "For reference, here is the same todo app written with a more direct React API")
+            (<> "pre" (<> "code" #:props ([ className "language-racket"]) todo-orig-source-code)))))
 
-(define (remove-todo state action)
-    (filter (lambda (el) (not (eq? ($ el 'id) ($ action 'id)))) ($ state 'todos)))
+(define-component app
+    (<> "div" #:props ([ className "container" ])
+        (<> header)
+        (<> intro)
+        (<> "h2" "Examples")
+        (<> counter-example)
+        (<> todo-example)
+        (<> todo-orig-example)))
 
-(define (reducer state action)
-    (cond
-        [(eq? ($ action 'type) \"add\")
-            ($/obj [ todos (add-todo state action)])]
-        [(eq? ($ action 'type) \"remove\")
-            ($/obj [ todos (remove-todo state action)])]
-        [else state]))
+(require (for-syntax mzlib/etc))
+(define-for-syntax this-dir (this-expression-source-directory))
 
-(define (todo-input props . ..)
-    (define ctx (use-context StateContext))
-    (define dispatch ($ ctx 'dispatch))
-    (define store ($ ctx 'store))
-    (define-values (text set-text) (use-state \"\"))
+;; get src code strs, at compile time, from actual file
+(define-syntax define-src-code-str-def
+  (syntax-parser
+    [(_ name:id)
+     #:with def-name (format-id #'name "~a-source-code" #'name)
+     #:with str-name (format-id #'name "~a-src-code-str" #'name)
+     #`(define def-name #,(syntax-local-value #'str-name))]))
 
-    (define (update-text e)
-        (set-text (js-string->string ($ e 'target 'value)) text))
+;; TODO:
+;; need get these first, rather than in the macro,
+;; bc racketscript seems to expand twice?
+(define-syntax counter-src-code-str
+  (file->string (build-path this-dir "counter.rkt")))
+(define-syntax todo-src-code-str
+  (file->string (build-path this-dir "todo.rkt")))
+(define-syntax todo-orig-src-code-str
+  (file->string (build-path this-dir "todo-orig.rkt")))
 
-    (define (submit-todo e)
-        (($ e 'preventDefault))
-        (dispatch ($/obj [ type \"add\" ]
-                       [ todo ($/obj [ id (#js*.Date.now) ]
-                                     [ text text ])]))
+(define-src-code-str-def counter)
+(define-src-code-str-def todo)
+(define-src-code-str-def todo-orig)
 
-    (set-text \"\"))
-
-    (<el \"form\"
-         #:props ($/obj [ onSubmit submit-todo ])
-            (<el \"input\"
-                #:props ($/obj [ className \"todo-input\" ]
-                               [ placeholder \"What needs to be done?\" ]
-                               [ value text ]
-                               [ onChange update-text]))))
-
-(define (todo-item props . ..)
-    (define ctx (use-context StateContext))
-    (define dispatch ($ ctx 'dispatch))
-    (define (remove-todo id)
-        (dispatch ($/obj [ type \"remove\" ]
-                         [ id ($ props 'todo 'id) ])))
-
-    (<el \"li\"
-        #:props ($/obj [ className \"todo-item\"])
-            ($ props 'todo 'text)
-            (<el \"button\"
-                #:props ($/obj [ type \"button\" ]
-                            [ className \"button button-clear todo-remove-button\"]
-                            [ onClick remove-todo ])
-                \"x\")))
-
-(define (todo-list props . ..)
-    (define ctx (use-context StateContext))
-    (define dispatch ($ ctx 'dispatch))
-    (define store ($ ctx 'store))
-
-    (<el \"ul\"
-         (map (lambda (todo) (<el todo-item #:props ($/obj [todo todo]))) ($ store 'todos))))
-
-(define (todo-app props . ..)
-    (define provider ($ StateContext 'Provider))
-    (define default-state ($/obj [todos (list)]))
-    (define-values (store dispatch) (use-reducer reducer default-state))
-
-    (<el provider
-        #:props ($/obj [ value
-            ($/obj [ store store ]
-                   [ dispatch dispatch ])])
-        (<el \"div\"
-            (<el todo-input))
-            (<el todo-list)))
-
-(provide todo-app)
-")
-
-(define counter-source-code "(define (counter props ..)
-    (define-values (counter set-counter) (use-state 0))
-
-    (<el \"div\"
-        (<el \"button\"
-            #:props ($/obj [ className \"button\" ]
-                   [ type \"button\" ]
-                   [onClick (lambda (_) (set-counter (- counter 1)))])
-            \"- 1\")
-
-        (<el \"span\" #:props ($/obj [ className \"counter\" ]) counter)
-
-        (<el \"button\"
-            #:props ($/obj [ className \"button\" ]
-                   [ type \"button\" ]
-                   [onClick (lambda (_) (set-counter (+ counter 1)))])
-            \"+ 1\")))")
-
-(render (<el app) "root")
+(render (<> app) "root")
 
 

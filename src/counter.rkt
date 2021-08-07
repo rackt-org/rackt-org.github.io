@@ -3,22 +3,24 @@
 (require racketscript/interop
          rackt)
 
-(define (counter props ..)
-    (define-values (counter set-counter) (use-state 0))
+(define-component counter
+  ;; A call to (define-state name val) defines two variables:
+  ;; - name
+  ;; - set-name!
+  ;; define-state is shorthand for React's useState
+  (define-state COUNT 0)
 
-    (<el "div"
-        (<el "button"
-            #:props ($/obj [ className "button" ]
-                   [ type "button" ]
-                   [onClick (lambda (_) (set-counter (- counter 1)))])
-            "- 1")
+  (<> "div"
+      (<> "button" #:props ([ className "button" ]
+                            [ type "button" ]
+                            [ onClick (lambda (_) (set-COUNT! (sub1 COUNT))) ])
+          "- 1")
 
-        (<el "span" #:props ($/obj [ className "counter" ]) counter)
+      (<> "span" #:props ([ className "counter" ]) COUNT)
 
-        (<el "button"
-            #:props ($/obj [ className "button" ]
-                   [ type "button" ]
-                   [onClick (lambda (_) (set-counter (+ counter 1)))])
-            "+ 1")))
+      (<> "button" #:props ([ className "button" ]
+                            [ type "button" ]
+                            [ onClick (lambda (_) (set-COUNT! (add1 COUNT))) ])
+          "+ 1")))
 
 (provide counter)
