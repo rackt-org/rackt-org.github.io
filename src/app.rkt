@@ -4,8 +4,8 @@
                      racket/file
                      racket/syntax
                      syntax/parse)
-         "./counter-new.rkt"
-         "./todo-new.rkt"
+         "./counter.rkt"
+         "./todo.rkt"
          rackt)
 
 (define-component header
@@ -66,7 +66,7 @@
 (define-component todo-orig-example
     (<> "div" #:props ([ className "example" ])
         (<> "div"
-            (<> "p" "For reference, here is the same todo app written with a lower level React API")
+            (<> "p" "For reference, here is the same todo app written with a more direct React API")
             (<> "pre" (<> "code" #:props ([ className "language-racket"]) todo-orig-source-code)))))
 
 (define-component app
@@ -93,11 +93,11 @@
 ;; need get these first, rather than in the macro,
 ;; bc racketscript seems to expand twice?
 (define-syntax counter-src-code-str
-  (file->string (build-path this-dir "counter-new.rkt")))
+  (file->string (build-path this-dir "counter.rkt")))
 (define-syntax todo-src-code-str
-  (file->string (build-path this-dir "todo-new.rkt")))
-(define-syntax todo-orig-src-code-str
   (file->string (build-path this-dir "todo.rkt")))
+(define-syntax todo-orig-src-code-str
+  (file->string (build-path this-dir "todo-orig.rkt")))
 
 (define-src-code-str-def counter)
 (define-src-code-str-def todo)
