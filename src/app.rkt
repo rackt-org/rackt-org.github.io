@@ -11,7 +11,7 @@
                                       [ className "logo" ]))
             (<el "h1" (<el  "a" #:props ($/obj [ href "https://github.com/rackt-org/rackt" ]) "Rackt"))
             (<el "p" "An ultrasmall (~70 loc) React wrapper written in "
-                (<el "a" #:props ($/obj [ href "https://github.com/vishesh/racketscript" ]) "RacketScript")))))
+                (<el "a" #:props ($/obj [ href "https://github.com/racketscript/racketscript" ]) "RacketScript")))))
 
 (define (intro props . ..)
     (<el "div"
